@@ -1,5 +1,9 @@
+from window import Window
+
+
 def main():
-    pass
+    window = Window()
+    window.run()
 
 
 if __name__ == "__main__":
