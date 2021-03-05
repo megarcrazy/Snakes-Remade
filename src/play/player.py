@@ -13,6 +13,7 @@ class Player(GameObject):
         self._head = []
         self._tail = []
         self._size = 0
+        self._prev_direction = None
         self._direction = c.RIGHT
         self._initialise_player()
         self._fruit.spawn_fruit(self.get_body())
@@ -21,13 +22,13 @@ class Player(GameObject):
 
     def user_input(self):
         keys = UserInput.get_keyboard()
-        if keys[pygame.K_w]:
+        if keys[pygame.K_w] and self._prev_direction != c.DOWN:
             self._direction = c.UP
-        elif keys[pygame.K_s]:
+        elif keys[pygame.K_s] and self._prev_direction != c.UP:
             self._direction = c.DOWN
-        elif keys[pygame.K_a]:
+        elif keys[pygame.K_a] and self._prev_direction != c.RIGHT:
             self._direction = c.LEFT
-        elif keys[pygame.K_d]:
+        elif keys[pygame.K_d] and self._prev_direction != c.LEFT:
             self._direction = c.RIGHT
 
     def update(self):
@@ -75,16 +76,20 @@ class Player(GameObject):
         self._size += 2
 
     def _move_snake(self):
+        self._prev_direction = self._direction
         last = self._tail[-1]
         self._tail = [list(self._head)] + self._tail[:-1]
         self._head = [
             self._head[0] + self._direction[0],
             self._head[1] + self._direction[1]
         ]
-        if self._head == self._fruit.get_location():
+        if self._check_fruit_collision():
             self._tail += [last]
             self._fruit.spawn_fruit(self.get_body())
         self._check_collision()
+
+    def _check_fruit_collision(self):
+        return self._head == self._fruit.get_location()
 
     def _check_collision(self):
         if self._head in self._tail:
