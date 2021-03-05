@@ -11,5 +11,8 @@ class Text(GameObject):
         self._text = self._font.render("You Lose", False, c.BLACK)
 
     def render(self):
-        text_rect = self._text.get_rect(center=(c.SCREEN_WIDTH//2, c.SCREEN_HEIGHT//2))
+        centre = c.SCREEN_WIDTH//2, c.SCREEN_HEIGHT//2
+        text_rect = self._text.get_rect(center=centre)
+        pygame.draw.rect(self._screen, c.BLACK, text_rect, width=5)
+        pygame.draw.rect(self._screen, c.WHITE, text_rect)
         self._screen.blit(self._text, text_rect)

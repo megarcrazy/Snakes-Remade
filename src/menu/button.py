@@ -1,6 +1,6 @@
 import pygame
 from src.gameObject import GameObject
-from src.user_input import UserInput
+from src.userInput import UserInput
 import src.constants as c
 
 

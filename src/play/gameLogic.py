@@ -5,7 +5,7 @@ from src.play.text import Text
 import src.constants as c
 
 
-class Grid(GameObject):
+class GameLogic(GameObject):
 
     def __init__(self, screen):
         super().__init__(screen)
@@ -25,10 +25,10 @@ class Grid(GameObject):
         self._check_lose()
 
     def render(self):
-        if self._lose:
-            self._text.render()
         self._fruit.render()
         self._player.render()
+        if self._lose:
+            self._text.render()
 
     def _check_lose(self):
         segments = self._player.get_body()
@@ -38,4 +38,3 @@ class Grid(GameObject):
         head_boundary_collision = not (0 <= head[0] < c.TILE_X and 0 <= head[1] < c.TILE_Y)
         if head_body_collision or head_boundary_collision:
             self._lose = True
-

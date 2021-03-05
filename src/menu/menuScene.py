@@ -1,9 +1,10 @@
 from src.sceneManager import SceneManager
-from src.menu.play_button import PlayButton
+from src.menu.playButton import PlayButton
+from src.menu.controlsButton import ControlsButton
 import src.constants as c
 
 
-class Menu(SceneManager):
+class MenuScene(SceneManager):
 
     def __init__(self, screen):
         super().__init__(screen)
@@ -31,5 +32,5 @@ class Menu(SceneManager):
         return self._scene_index
 
     def initialise_buttons(self):
-        buttons = [PlayButton(self._screen)]
+        buttons = [PlayButton(self._screen), ControlsButton(self._screen)]
         return buttons
