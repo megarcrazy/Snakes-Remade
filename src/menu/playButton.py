@@ -1,5 +1,5 @@
 from src.menu.button import Button
-import src.constants as c
+import src.other.constants as c
 
 
 class PlayButton(Button):

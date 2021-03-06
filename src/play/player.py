@@ -1,7 +1,7 @@
 import pygame
-from src.gameObject import GameObject
-from src.userInput import UserInput
-import src.constants as c
+from src.other.gameObject import GameObject
+from src.other.userInput import UserInput
+import src.other.constants as c
 
 
 class Player(GameObject):
@@ -20,6 +20,23 @@ class Player(GameObject):
 
         self._counter = 0
 
+    def _initialise_player(self):
+        self._initialise_head()
+        self._initialise_tail()
+
+    def _initialise_head(self):
+        x = c.SCREEN_WIDTH // (2 * c.GRID_SIZE)
+        y = c.SCREEN_HEIGHT // (2 * c.GRID_SIZE)
+        self._head = [x, y]
+        self._size += 1
+
+    def _initialise_tail(self):
+        self._tail.append([self._head[0] - 1, self._head[1]])
+        self._tail.append([self._head[0] - 2, self._head[1]])
+        self._size += 2
+
+    # Change direction of snake with the user input and prevent the snake
+    # from going backwards
     def user_input(self):
         keys = UserInput.get_keyboard()
         if keys[pygame.K_w] and self._prev_direction != c.DOWN:
@@ -38,12 +55,39 @@ class Player(GameObject):
         self._render_tail()
         self._render_head()
 
+    # Update
+
     def _update_position(self):
         if self._counter == c.SNAKE_SPEED:
             self._move_snake()
             self._counter = 0
         else:
             self._counter += 1
+
+    # Move snake in the direction the snake is heading
+    def _move_snake(self):
+        self._prev_direction = self._direction
+
+        # Save the location of the end of the tail and
+        # elongate snake if it eats a fruit
+        last_segment = self._tail[-1]
+        self._tail = [list(self._head)] + self._tail[:-1]
+        self._head = [
+            self._head[0] + self._direction[0],
+            self._head[1] + self._direction[1]
+        ]
+
+        # Elongate and spawn another fruit
+        self._fruit_collision(last_segment)
+
+    # Checks if the head occupies the same tile as the fruit
+    def _fruit_collision(self, last_segment):
+        if self._head == self._fruit.get_location():
+            self._tail += [last_segment]
+            self._fruit.spawn_fruit(self.get_body())
+            self._size += 1
+
+    # ----- Render -----
 
     def _render_head(self):
         head_rect = [
@@ -60,48 +104,7 @@ class Player(GameObject):
             ]
             pygame.draw.rect(self._screen, c.SNAKE_COLOUR, segment_rect)
 
-    def _initialise_player(self):
-        self._initialise_head()
-        self._initialise_tail()
-
-    def _initialise_head(self):
-        x = c.SCREEN_WIDTH // (2 * c.GRID_SIZE)
-        y = c.SCREEN_HEIGHT // (2 * c.GRID_SIZE)
-        self._head = [x, y]
-        self._size += 1
-
-    def _initialise_tail(self):
-        self._tail.append([self._head[0] - 1, self._head[1]])
-        self._tail.append([self._head[0] - 2, self._head[1]])
-        self._size += 2
-
-    def _move_snake(self):
-        self._prev_direction = self._direction
-        last = self._tail[-1]
-        self._tail = [list(self._head)] + self._tail[:-1]
-        self._head = [
-            self._head[0] + self._direction[0],
-            self._head[1] + self._direction[1]
-        ]
-        if self._check_fruit_collision():
-            self._tail += [last]
-            self._fruit.spawn_fruit(self.get_body())
-        self._check_collision()
-
-    def _check_fruit_collision(self):
-        return self._head == self._fruit.get_location()
-
-    def _check_collision(self):
-        if self._head in self._tail:
-            self._lose = True
-        elif 1:
-            self._check_out_of_bounds()
-
-    def _check_out_of_bounds(self):
-        self._lose = not (
-            0 <= self._head[0] <= c.TILE_X - 1 and
-            0 <= self._head[1] <= c.TILE_Y - 1
-        )
+    # ----- Public -----
 
     def get_body(self):
         return [self._head] + self._tail

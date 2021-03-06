@@ -1,7 +1,7 @@
 import pygame
 import random
-from src.gameObject import GameObject
-import src.constants as c
+from src.other.gameObject import GameObject
+import src.other.constants as c
 
 
 class Fruit(GameObject):
@@ -18,6 +18,7 @@ class Fruit(GameObject):
         ]
         pygame.draw.rect(self._screen, c.FRUIT_COLOUR, rect)
 
+    # Randomly spawns the fruit on an empty tile
     def spawn_fruit(self, player_body):
         x = random.randint(0, c.TILE_X - 1)
         y = random.randint(0, c.TILE_Y - 1)

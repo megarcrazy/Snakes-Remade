@@ -2,7 +2,7 @@ import pygame
 from src.menu.menuScene import MenuScene
 from src.play.playScene import PlayScene
 from src.controls.controlsScene import ControlsScene
-import src.constants as c
+import src.other.constants as c
 
 
 class Window:
@@ -11,11 +11,16 @@ class Window:
         pygame.init()
         self._screen = pygame.display.set_mode((c.SCREEN_WIDTH, c.SCREEN_HEIGHT))
         pygame.display.set_caption(c.TITLE)
+
+        # Initialise the window at the menu scene
         self._current_scene_index = c.MENU_SCENE_INDEX
         self._scene = MenuScene(self._screen)
 
+        # The game logic updates every c.PYGAME_DELAY//c.INPUT_DELAY ticks
         self._tick_counter = 0
 
+    # Pygame is run with a given delay per iteration. Pygame detects the
+    # user input more frequently than the game updates for a smoother gameplay
     def run(self):
         state = True
         while state:
@@ -34,6 +39,8 @@ class Window:
             pygame.time.delay(c.INPUT_DELAY)
             self._tick_counter += 1
 
+    # Checks if the scene index has changed and changes the scene
+    # if it has changed
     def change_scene(self, scene_index):
         if scene_index != self._current_scene_index:
             if scene_index == c.MENU_SCENE_INDEX:

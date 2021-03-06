@@ -1,7 +1,7 @@
 import pygame
-from src.gameObject import GameObject
-from src.userInput import UserInput
-import src.constants as c
+from src.other.gameObject import GameObject
+from src.other.userInput import UserInput
+import src.other.constants as c
 
 
 class SceneManager(GameObject):
@@ -13,6 +13,7 @@ class SceneManager(GameObject):
     def change_scene(self):
         return self._scene_index
 
+    # Pressing the escape key returns the user back to the main menu
     def _return_to_menu(self):
         keys = UserInput.get_keyboard()
         if keys[pygame.K_ESCAPE]:

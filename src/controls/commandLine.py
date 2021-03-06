@@ -1,6 +1,6 @@
 import pygame
-from src.gameObject import GameObject
-import src.constants as c
+from src.other.gameObject import GameObject
+import src.other.constants as c
 
 
 class CommandLine(GameObject):
